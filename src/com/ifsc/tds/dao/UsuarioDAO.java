@@ -101,33 +101,16 @@ public class UsuarioDAO implements DAO<Usuario> {
 			
 			stm.setString(1, username);
 			rset = stm.executeQuery();
-
+			
+			String password = null;
+			
 			// Enquanto existir dados (registros) no banco de dados, recupera
 			while (rset.next()) {
-
-				usuario = new Usuario();
-				// Recupera o id do banco e atribui ele ao objeto
-				usuario.setId(rset.getInt("id"));
-
-				// Recupera o nome do banco e atribui ele ao objeto
-				usuario.setNome(rset.getString("nome"));
-
-				// Recupera o login do banco e atribui ele ao objeto
-				usuario.setLogin(rset.getString("login"));
-
-				// Recupera a senha do banco e atribui ele ao objeto
-				usuario.setSenha(rset.getString("senha"));
-
-				// Recupera o login do banco e atribui ele ao objeto
-				usuario.setEmail(rset.getString("email"));
-
-				// Recupera a data de cadastro do banco e atribui ela ao objeto
-				usuario.setDataCadastro(rset.getDate("data_cadastro"));
+				
+				password = rset.getString("senha");
 			}
 			
-			if(usuario.getSenha() == null) return false;
-			
-			auth = user.getSenha().equals(usuario.getSenha());
+			auth = user.getSenha().equals(password);
 			
 			System.out.println(auth);
 			
