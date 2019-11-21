@@ -211,6 +211,34 @@ public class MenuController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	@FXML
+	public void mnoTipoConta(ActionEvent event) {
+		try {
+			// Carregando o arquivo da tela de usuario
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ifsc/tds/view/TipoContaLista.fxml"));
+			Parent tipoContaListaXML = loader.load();
+
+			// Carregando a classe de controle do arquivo da tela
+			TipoContaListaController tipoContaListaController = loader.getController();
+			Scene tipoContaListaLayout = new Scene(tipoContaListaXML);
+
+			this.getStage().setScene(tipoContaListaLayout);
+			this.getStage().setTitle("Cadastro de Tipo de Conta");
+
+			// Atribuindo evento para fechar a tela
+			this.getStage().setOnCloseRequest(e -> {
+				if (tipoContaListaController.onCloseQuery()) {
+					this.getStage().close();
+				} else {
+					e.consume();
+				}
+			});
+			this.getStage().show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@FXML
 	public void mnoRelatorioUsuario(ActionEvent event) {
