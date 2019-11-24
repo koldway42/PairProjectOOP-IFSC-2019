@@ -20,7 +20,7 @@ public class UsuarioDAO implements DAO<Usuario> {
 	@Override
 	public Usuario get(Long id) {
 		Usuario usuario = null;
-		String sql = "select from usuario where id = ?";
+		String sql = "select * from usuario where id = ?";
 
 		// Recupera uma conexão com o banco
 		Connection conexao = null;
@@ -58,7 +58,7 @@ public class UsuarioDAO implements DAO<Usuario> {
 				usuario.setEmail(rset.getString("email"));
 
 				// Recupera a data de cadastro do banco e atribui ela ao objeto
-				usuario.setDataCadastro(rset.getDate("dataCadastro"));
+				usuario.setDataCadastro(rset.getDate("data_cadastro"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,8 +111,6 @@ public class UsuarioDAO implements DAO<Usuario> {
 			}
 			
 			auth = user.getSenha().equals(password);
-			
-			System.out.println(auth);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

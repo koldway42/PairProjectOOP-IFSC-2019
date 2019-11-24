@@ -6,27 +6,24 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ifsc.tds.entity.ContaPagar;
-import com.ifsc.tds.entity.Favorecido;
-import com.ifsc.tds.entity.TipoConta;
-import com.ifsc.tds.entity.Usuario;
+import com.ifsc.tds.entity.*;
 
-public class ContaPagarDAO implements DAO<ContaPagar> {
+public class ContaReceberDAO implements DAO<ContaReceber>{
 
 	private UsuarioDAO usuarioDAO;
 	private FavorecidoDAO favorecidoDAO;
 	private TipoContaDAO tipoContaDAO;
-
-	public ContaPagarDAO() {
+	
+	public ContaReceberDAO() {
 		this.setFavorecidoDAO(new FavorecidoDAO());
 		this.setTipoContaDAO(new TipoContaDAO());
 		this.setUsuarioDAO(new UsuarioDAO());
 	}
-
+	
 	@Override
-	public ContaPagar get(Long id) {
-		ContaPagar contaPagar = null;
-		String sql = "select * from contas_pagar where id = ?";
+	public ContaReceber get(Long id) {
+		ContaReceber contaReceber = null;
+		String sql = "select * from contas_receber where id = ?";
 		Connection conexao = null;
 		PreparedStatement stm = null;
 
@@ -44,41 +41,41 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 			// Enquanto existir dados (registros) no banco de dados, recupera
 			while (rset.next()) {
 
-				contaPagar = new ContaPagar();
+				contaReceber = new ContaReceber();
 				// Recupera o id do banco e atribui ele ao objeto
-				contaPagar.setId(rset.getInt("id"));
+				contaReceber.setId(rset.getInt("id"));
 
 				// Recupera a descrição do banco e atribui ele ao objeto
-				contaPagar.setDescricao(rset.getString("descricao"));
+				contaReceber.setDescricao(rset.getString("descricao"));
 
 				// Recupera a data de cadastro do banco e atribui ele ao objeto
-				contaPagar.setDataCadastro(rset.getDate("data_cadastro"));
+				contaReceber.setDataCadastro(rset.getDate("data_cadastro"));
 
 				// Recupera a data de vencimento do banco e atribui ele ao objeto
-				contaPagar.setDataVencimento(rset.getDate("data_vencimento"));
+				contaReceber.setDataVencimento(rset.getDate("data_vencimento"));
 
 				// Recupera a data de pagamento do banco e atribui ele ao objeto
-				contaPagar.setDataPagamento(rset.getDate("data_pagamento"));
+				contaReceber.setDataPagamento(rset.getDate("data_pagamento"));
 
 				// Recupera o valor total do banco e atribui ao objeto
-				contaPagar.setValorTotal(rset.getDouble("valor_total"));
+				contaReceber.setValorTotal(rset.getDouble("valor_total"));
 
 				// Pesquisa a chave do usuario para atribuir depois o objeto Usuário na conta
 				id = rset.getLong("usuario_id");
 				Usuario usuario = this.getUsuarioDAO().get(id);
-				contaPagar.setUsuario(usuario);
+				contaReceber.setUsuario(usuario);
 
 				// Pesquisa a chave do favorecido para atribuir depois o objeto Favorecido na
 				// conta
 				id = rset.getLong("favorecido_id");
 				Favorecido favorecido = this.getFavorecidoDAO().get(id);
-				contaPagar.setFavorecido(favorecido);
+				contaReceber.setFavorecido(favorecido);
 
 				// Pesquisa a chave do tipo de conta para atribuir depois o objeto Favorecido na
 				// conta
 				id = rset.getLong("tipo_conta_id");
 				TipoConta tipoConta = this.getTipoContaDAO().get(id);
-				contaPagar.setTipoConta(tipoConta);
+				contaReceber.setTipoConta(tipoConta);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,15 +94,16 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 				e.printStackTrace();
 			}
 		}
-		return contaPagar;
+		return contaReceber;
+
 
 	}
 
 	@Override
-	public List<ContaPagar> getAll() {
-		List<ContaPagar> contasPagar = new ArrayList<ContaPagar>();
+	public List<ContaReceber> getAll() {
+		List<ContaReceber> contasReceber = new ArrayList<ContaReceber>();
 
-		String sql = "select * from contas_pagar";
+		String sql = "select * from contas_receber";
 		Connection conexao = null;
 		PreparedStatement stm = null;
 
@@ -121,44 +119,44 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 			// Enquanto existir dados (registros) no banco de dados, recupera
 			while (rset.next()) {
 
-				ContaPagar contaPagar = new ContaPagar();
+				ContaReceber contaReceber = new ContaReceber();
 				// Recupera o id do banco e atribui ele ao objeto
-				contaPagar.setId(rset.getInt("id"));
+				contaReceber.setId(rset.getInt("id"));
 
 				// Recupera a descrição do banco e atribui ele ao objeto
-				contaPagar.setDescricao(rset.getString("descricao"));
+				contaReceber.setDescricao(rset.getString("descricao"));
 
 				// Recupera a data de cadastro do banco e atribui ele ao objeto
-				contaPagar.setDataCadastro(rset.getDate("data_cadastro"));
+				contaReceber.setDataCadastro(rset.getDate("data_cadastro"));
 
 				// Recupera a data de vencimento do banco e atribui ele ao objeto
-				contaPagar.setDataVencimento(rset.getDate("data_vencimento"));
+				contaReceber.setDataVencimento(rset.getDate("data_vencimento"));
 
 				// Recupera a data de pagamento do banco e atribui ele ao objeto
-				contaPagar.setDataPagamento(rset.getDate("data_pagamento"));
+				contaReceber.setDataPagamento(rset.getDate("data_pagamento"));
 
 				// Recupera o valor total do banco e atribui ao objeto
-				contaPagar.setValorTotal(rset.getDouble("valor_total"));
+				contaReceber.setValorTotal(rset.getDouble("valor_total"));
 
 				// Pesquisa a chave do usuario para atribuir depois o objeto Usuário na conta
 				Long id = rset.getLong("usuario_id");
 				Usuario usuario = this.getUsuarioDAO().get(id);
-				contaPagar.setUsuario(usuario);
+				contaReceber.setUsuario(usuario);
 
 				// Pesquisa a chave do favorecido para atribuir depois o objeto Favorecido na
 				// conta
 				id = rset.getLong("favorecido_id");
 				Favorecido favorecido = this.getFavorecidoDAO().get(id);
-				contaPagar.setFavorecido(favorecido);
+				contaReceber.setFavorecido(favorecido);
 
 				// Pesquisa a chave do tipo de conta para atribuir depois o objeto Favorecido na
 				// conta
 				id = rset.getLong("tipo_conta_id");
 				TipoConta tipoConta = this.getTipoContaDAO().get(id);
-				contaPagar.setTipoConta(tipoConta);
+				contaReceber.setTipoConta(tipoConta);
 
 				// Adiciono o contato recuperado, a lista de contatos
-				contasPagar.add(contaPagar);
+				contasReceber.add(contaReceber);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -177,12 +175,13 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 				e.printStackTrace();
 			}
 		}
-		return contasPagar;
+		return contasReceber;
+
 	}
 
 	@Override
-	public int save(ContaPagar contaPagar) {
-		String sql = "insert into contas_pagar"
+	public int save(ContaReceber contaReceber) {
+		String sql = "insert into contas_receber"
 				+ "(descricao, data_cadastro, data_vencimento, data_pagamento,"
 				+ " valor_total, usuario_id, favorecido_id, tipo_conta_id)"
 				+ "values(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -193,16 +192,16 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 			conexao = new Conexao().getConnection();
 			stm = conexao.prepareStatement(sql);
 			
-			stm.setString(1, contaPagar.getDescricao());
-			stm.setDate(2, contaPagar.getDataCadastro());
-			stm.setDate(3, contaPagar.getDataVencimento());
-			stm.setDate(4, contaPagar.getDataPagamento());
-			stm.setDouble(5, contaPagar.getValorTotal());
-			Usuario usuario = contaPagar.getUsuario();
+			stm.setString(1, contaReceber.getDescricao());
+			stm.setDate(2, contaReceber.getDataCadastro());
+			stm.setDate(3, contaReceber.getDataVencimento());
+			stm.setDate(4, contaReceber.getDataPagamento());
+			stm.setDouble(5, contaReceber.getValorTotal());
+			Usuario usuario = contaReceber.getUsuario();
 			stm.setLong(6, usuario.getId());
-			Favorecido favorecido = contaPagar.getFavorecido();
+			Favorecido favorecido = contaReceber.getFavorecido();
 			stm.setLong(7, favorecido.getId());
-			TipoConta tipoConta = contaPagar.getTipoConta();
+			TipoConta tipoConta = contaReceber.getTipoConta();
 			stm.setLong(8, tipoConta.getId());			
 			
 			stm.execute();
@@ -227,8 +226,8 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 	}
 
 	@Override
-	public boolean update(ContaPagar contaPagar, String[] params) {
-		String sql = "update contas_pagar set "
+	public boolean update(ContaReceber contaReceber, String[] params) {
+		String sql = "update contas_receber set "
 				+ "descricao = ?, data_cadastro = ? , data_vencimento = ?, data_pagamento = ?,"
 				+ " valor_total = ?, usuario_id = ?, favorecido_id = ?, tipo_conta_id = ? " + 
 				"where id = ?";
@@ -239,18 +238,18 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 			conexao = new Conexao().getConnection();
 			stm = conexao.prepareStatement(sql);
 			
-			stm.setString(1, contaPagar.getDescricao());
-			stm.setDate(2, contaPagar.getDataCadastro());
-			stm.setDate(3, contaPagar.getDataVencimento());
-			stm.setDate(4, contaPagar.getDataPagamento());
-			stm.setDouble(5, contaPagar.getValorTotal());
-			Usuario usuario = contaPagar.getUsuario();
+			stm.setString(1, contaReceber.getDescricao());
+			stm.setDate(2, contaReceber.getDataCadastro());
+			stm.setDate(3, contaReceber.getDataVencimento());
+			stm.setDate(4, contaReceber.getDataPagamento());
+			stm.setDouble(5, contaReceber.getValorTotal());
+			Usuario usuario = contaReceber.getUsuario();
 			stm.setLong(6, usuario.getId());
-			Favorecido favorecido = contaPagar.getFavorecido();
+			Favorecido favorecido = contaReceber.getFavorecido();
 			stm.setLong(7, favorecido.getId());
-			TipoConta tipoConta = contaPagar.getTipoConta();
+			TipoConta tipoConta = contaReceber.getTipoConta();
 			stm.setLong(8, tipoConta.getId());		
-			stm.setInt(9, contaPagar.getId());
+			stm.setInt(9, contaReceber.getId());
 			
 			stm.execute();
 			
@@ -273,8 +272,8 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 	}
 
 	@Override
-	public boolean delete(ContaPagar contaPagar) {
-		String sql = "delete from contas_pagar where id = ?";
+	public boolean delete(ContaReceber contaReceber) {
+		String sql = "delete from contas_receber where id = ?";
 
 		// Recupera uma conexão com o banco
 		Connection conexao = null;
@@ -286,7 +285,7 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 			conexao = new Conexao().getConnection();
 
 			stm = conexao.prepareStatement(sql);
-			stm.setInt(1, contaPagar.getId());
+			stm.setInt(1, contaReceber.getId());
 			stm.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -329,5 +328,8 @@ public class ContaPagarDAO implements DAO<ContaPagar> {
 	public void setTipoContaDAO(TipoContaDAO tipoContaDAO) {
 		this.tipoContaDAO = tipoContaDAO;
 	}
+	
+	
+	
 
 }
