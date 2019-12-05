@@ -15,6 +15,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+DROP DATABASE IF EXISTS javafx;
+CREATE DATABASE IF NOT EXISTS javafx;
+USE javafx;
+
 --
 -- Table structure for table `contas_pagar`
 --
@@ -97,10 +101,13 @@ DROP TABLE IF EXISTS `favorecido`;
 CREATE TABLE `favorecido` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
+  `numero_titular` varchar(45),
+  `valor` varchar(45),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+INSERT INTO `favorecido` (`id`, `nome`, `numero_titular`, `valor`) VALUES ('1', 'Favorecido', '12', '15');
 --
 -- Dumping data for table `favorecido`
 --
@@ -125,6 +132,7 @@ CREATE TABLE `tipo_conta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+INSERT INTO `tipo_conta` (`id`, `nome`, `status`) VALUES ('1', 'Credito', '1');
 --
 -- Dumping data for table `tipo_conta`
 --

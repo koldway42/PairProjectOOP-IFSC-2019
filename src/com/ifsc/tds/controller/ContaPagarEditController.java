@@ -5,8 +5,12 @@ import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.ifsc.tds.dao.FavorecidoDAO;
+import com.ifsc.tds.dao.TipoContaDAO;
 import com.ifsc.tds.dao.UsuarioDAO;
 import com.ifsc.tds.entity.ContaPagar;
+import com.ifsc.tds.entity.Favorecido;
+import com.ifsc.tds.entity.TipoConta;
 import com.ifsc.tds.entity.Usuario;
 
 import javafx.collections.FXCollections;
@@ -25,29 +29,59 @@ import javafx.stage.Stage;
 
 public class ContaPagarEditController implements Initializable {
 
-	@FXML
-	private Label lblDescricao;
+    @FXML
+    private Label lblDescricao;
 
-	@FXML
-	private TextField txtDescricao;
+    @FXML
+    private TextField txtDescricao;
 
-	@FXML
-	private Label lblUsuario;
+    @FXML
+    private Label lblUsuario;
 
-	@FXML
-	private ComboBox<Usuario> cbxUsuario;
+    @FXML
+    private ComboBox<Usuario> cbxUsuario;
 
-	@FXML
-	private Label lblDataVencimento;
+    @FXML
+    private Label lblDataVencimento;
 
-	@FXML
-	private DatePicker dtpDataVencimento;
+    @FXML
+    private DatePicker dtpDataVencimento;
 
-	@FXML
-	private Button btnOk;
+    @FXML
+    private ComboBox<TipoConta> cbxTipoConta;
 
-	@FXML
-	private Button btnCancela;
+    @FXML
+    private Label lblTipoConta;
+
+    @FXML
+    private ComboBox<Favorecido> cbxFavorecido;
+
+    @FXML
+    private Label lblFavorecido;
+
+    @FXML
+    private Label lblDataPagamento;
+
+    @FXML
+    private DatePicker dtpDataPagamento;
+
+    @FXML
+    private Label lblDataCadastro;
+
+    @FXML
+    private DatePicker dtpDataCadastro;
+
+    @FXML
+    private Label lblValorTotal;
+
+    @FXML
+    private TextField txtValorTotal;
+
+    @FXML
+    private Button btnOk;
+
+    @FXML
+    private Button btnCancela;
 
 	private Stage janelaContaPagarEdit;
 	private ContaPagar contaPagar;
@@ -56,6 +90,14 @@ public class ContaPagarEditController implements Initializable {
 	private List<Usuario> listaUsuarios;
 	private UsuarioDAO UsuarioDAO;
 	private ObservableList<Usuario> observableListaUsuarios;
+	
+	private List<Favorecido> listaFavorecidos;
+	private FavorecidoDAO FavorecidoDAO;
+	private ObservableList<Favorecido> observableListaFavorecidos;
+	
+	private List<TipoConta> listaTiposConta;
+	private TipoContaDAO TipoContaDAO;
+	private ObservableList<TipoConta> observableListaTiposConta;
 
 	@FXML
 	void clickCancela(ActionEvent event) {
@@ -67,7 +109,12 @@ public class ContaPagarEditController implements Initializable {
 		if (validarCampos()) {
 			this.contaPagar.setDescricao(this.txtDescricao.getText());
 			this.contaPagar.setUsuario(this.cbxUsuario.getSelectionModel().getSelectedItem());
+			this.contaPagar.setTipoConta(this.cbxTipoConta.getSelectionModel().getSelectedItem());
+			this.contaPagar.setFavorecido(this.cbxFavorecido.getSelectionModel().getSelectedItem());
 			this.contaPagar.setDataVencimento(Date.valueOf(this.dtpDataVencimento.getValue()));
+			this.contaPagar.setDataCadastro(Date.valueOf(this.dtpDataCadastro.getValue()));
+			this.contaPagar.setDataPagamento(Date.valueOf(this.dtpDataPagamento.getValue()));
+			this.contaPagar.setValorTotal(Double.parseDouble(this.txtValorTotal.getText()));
 
 			this.okClick = true;
 			this.janelaContaPagarEdit.close();
@@ -77,8 +124,12 @@ public class ContaPagarEditController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.UsuarioDAO = new UsuarioDAO();
+		this.TipoContaDAO = new TipoContaDAO();
+		this.FavorecidoDAO = new FavorecidoDAO();
 
 		this.carregarComboBoxUsuarios();
+		this.carregarComboBoxTipoConta();
+		this.carregarComboBoxFavorecido();
 	}
 
 	/**
@@ -98,7 +149,8 @@ public class ContaPagarEditController implements Initializable {
 	public void setContaPagar(ContaPagar contaPagar) {
 		this.contaPagar = contaPagar;
 
-		this.txtDescricao.setText(contaPagar.getDescricao());
+//		this.txtDescricao.setText(contaPagar.getDescricao());
+//		this.txtValorTotal.setText(contaPagar.getValorTotal().toString());
 
 	}
 
@@ -150,5 +202,19 @@ public class ContaPagarEditController implements Initializable {
 
 		this.observableListaUsuarios = FXCollections.observableArrayList(listaUsuarios);
 		this.cbxUsuario.setItems(this.observableListaUsuarios);
+	}
+	
+	public void carregarComboBoxTipoConta() {
+		this.listaTiposConta = this.TipoContaDAO.getAll();
+
+		this.observableListaTiposConta = FXCollections.observableArrayList(listaTiposConta);
+		this.cbxTipoConta.setItems(this.observableListaTiposConta);
+	}
+	
+	public void carregarComboBoxFavorecido() {
+		this.listaFavorecidos = this.FavorecidoDAO.getAll();
+
+		this.observableListaFavorecidos = FXCollections.observableArrayList(listaFavorecidos);
+		this.cbxFavorecido.setItems(this.observableListaFavorecidos);
 	}
 }

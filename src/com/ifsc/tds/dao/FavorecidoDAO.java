@@ -1,13 +1,14 @@
 package com.ifsc.tds.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ifsc.tds.entity.Favorecido;
-import com.ifsc.tds.entity.TipoConta;
+import com.ifsc.tds.entity.Usuario;
 
 public class FavorecidoDAO implements DAO<Favorecido> {
 
@@ -15,16 +16,15 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 	public Favorecido get(Long id) {
 		Favorecido favorecido = null;
 		String sql = "select * from favorecido where id = ?";
-
 		// Recupera uma conexão com o banco
 		Connection conexao = null;
 		// Cria uma instância de PreparedStatment, classe usada para executar a operação
 		// SQL (query)
 		PreparedStatement stm = null;
-
-		// Classe que vai recuperar os dados do banco de dados
+		
+		//Classe que vai recuperar os dados do banco de dados
 		ResultSet rset = null;
-
+		
 		try {
 			conexao = new Conexao().getConnection();
 
@@ -42,6 +42,11 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 				// Recupera o nome do banco e atribui ele ao objeto
 				favorecido.setNome(rset.getString("nome"));
 
+				// Recupera o login do banco e atribui ele ao objeto
+				favorecido.setNumeroTitular(rset.getString("numero_titular"));
+
+				// Recupera a senha do banco e atribui ele ao objeto
+				favorecido.setValor(rset.getString("valor"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,7 +68,7 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 	@Override
 	public List<Favorecido> getAll() {
 		List<Favorecido> favorecidos = new ArrayList<Favorecido>();
-
+	
 		String sql = "select * from favorecido";
 		Connection conexao = null;
 		PreparedStatement stm = null;
@@ -76,10 +81,10 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 			stm = conexao.prepareStatement(sql);
 
 			rset = stm.executeQuery();
-
+			
 			// Enquanto existir dados (registros) no banco de dados, recupera
 			while (rset.next()) {
-
+				
 				Favorecido favorecido = new Favorecido();
 				// Recupera o id do banco e atribui ele ao objeto
 				favorecido.setId(rset.getInt("id"));
@@ -87,8 +92,14 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 				// Recupera o nome do banco e atribui ele ao objeto
 				favorecido.setNome(rset.getString("nome"));
 
-				// Adiciono o contato recuperado, a lista de contatos
+				// Recupera o login do banco e atribui ele ao objeto
+				favorecido.setNumeroTitular(rset.getString("numero_titular"));
+
+				// Recupera a senha do banco e atribui ele ao objeto
+				favorecido.setValor(rset.getString("valor"));
+				
 				favorecidos.add(favorecido);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,25 +120,41 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 		}
 		return favorecidos;
 	}
-
 	@Override
 	public int save(Favorecido favorecido) {
-		String sql = "insert into favorecido (nome)" + " values (?)";
+	
+		/*
+		 * Isso é uma sql comum, os ? são os parâmetros que nós vamos adicionar na base
+		 * de dados
+		 */
+		
+		String sql = "insert into favorecido (nome, numero_titular, valor) "+" values (?, ?, ?)";
 
 		Connection conexao = null;
 		PreparedStatement stm = null;
+		
 
 		try {
+			// Recupera uma conexão com o banco
 			conexao = new Conexao().getConnection();
 
+			// Cria uma instância de PreparedStatment, classe usada para executar a operação
+			// SQL (query)
 			stm = conexao.prepareStatement(sql);
 
+			// Adiciona o valor do primeiro parâmetro da sql
 			stm.setString(1, favorecido.getNome());
-
+			// Adicionar o valor do segundo parâmetro da sql
+			stm.setString(2, favorecido.getNumeroTitular());
+			// Adicionar o valor do terceiro parâmetro da sql
+			stm.setString(3, favorecido.getValor());
+	
+			// Executa a sql para inserção dos dados
 			stm.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			// Fecha as conexões
 			try {
 				if (stm != null) {
 					stm.close();
@@ -145,7 +172,8 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 
 	@Override
 	public boolean update(Favorecido favorecido, String[] params) {
-		String sql = "update favorecido set nome = ? " + "where id = ?";
+		//feito alterei de usuario para favorecido no update (update favorecido)
+		String sql = "update favorecido set nome = ?, numero_titular = ?, valor = ?" + " where id = ?";
 
 		Connection conexao = null;
 		PreparedStatement stm = null;
@@ -158,8 +186,14 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 			// SQL (query)
 			stm = conexao.prepareStatement(sql);
 
+			// Adiciona o valor do primeiro parâmetro da sql
 			stm.setString(1, favorecido.getNome());
-			stm.setInt(2, favorecido.getId());
+			// Adicionar o valor do segundo parâmetro da sql
+			stm.setString(2, favorecido.getNumeroTitular());
+			// Adicionar o valor do terceiro parâmetro da sql
+			stm.setString(3, favorecido.getValor());
+			
+			stm.setInt(4, favorecido.getId());
 
 			// Executa a sql para inserção dos dados
 			stm.execute();
@@ -197,6 +231,7 @@ public class FavorecidoDAO implements DAO<Favorecido> {
 
 			stm = conexao.prepareStatement(sql);
 			stm.setInt(1, favorecido.getId());
+		
 			stm.execute();
 		} catch (Exception e) {
 			e.printStackTrace();

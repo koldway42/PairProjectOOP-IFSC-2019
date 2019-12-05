@@ -183,6 +183,41 @@ public class MenuController implements Initializable {
 		}
 	}
 
+	public void mnoFavorecido(ActionEvent event) {
+		try {
+			// Carregando o arquivo da tela de usuario
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ifsc/tds/view/FavorecidoLista.fxml"));
+			Parent favorecidoListaXML = loader.load();
+
+			// Carregando a classe de controle do arquivo da tela
+			FavorecidoListaController favorecidoListaController = loader.getController();
+			Scene favorecidoListaLayout = new Scene(favorecidoListaXML);
+
+			this.getStage().setScene(favorecidoListaLayout);
+			this.getStage().setTitle("Cadastro de favorecidos");
+
+			// Atribuindo evento para fechar a tela
+			this.getStage().setOnCloseRequest(e -> {
+				if (favorecidoListaController.onCloseQuery()) {
+					this.getStage().close();
+				} else {
+					e.consume();
+				}
+			});
+			this.getStage().show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// Carregando a tela de usuários a parte de listagem
 	@FXML
 	public void mnoUsuario(ActionEvent event) {

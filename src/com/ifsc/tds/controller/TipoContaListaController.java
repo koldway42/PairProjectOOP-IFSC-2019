@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import com.ifsc.tds.dao.TipoContaDAO;
 import com.ifsc.tds.dao.UsuarioDAO;
+import com.ifsc.tds.entity.Favorecido;
 import com.ifsc.tds.entity.TipoConta;
 import com.ifsc.tds.entity.Usuario;
 
@@ -14,7 +15,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,6 +28,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class TipoContaListaController implements Initializable {
 
@@ -74,6 +80,8 @@ public class TipoContaListaController implements Initializable {
     private List<TipoConta> listaTipoConta;
     
     private ObservableList<TipoConta> observableListaTipoConta = FXCollections.observableArrayList();
+    public static final String CONTA_EDITAR = " - Editar";
+	public static final String CONTA_INCLUIR = " - Incluir";
     
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -108,10 +116,55 @@ public class TipoContaListaController implements Initializable {
 	    
 	    @FXML
 	    void onClickBtnEditar(ActionEvent event) {
+	    	TipoConta tipoConta = this.tbvUsuarios.getSelectionModel().getSelectedItem();
+			if (tipoConta != null) {
+				boolean btnConfirmarClic = this.showTelaTipoContaEditar(tipoConta,
+						TipoContaListaController.CONTA_EDITAR);
+				if (btnConfirmarClic) {
+					this.getTipoContaDao().update(tipoConta, null);
+					this.carregarTableViewTipoConta();
+				}
+			} else {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Por favor, escolha um usuário na Tabela!");
+				alert.show();
+			}
+		}
+	    	
+	    	
+	    
+	    private boolean showTelaTipoContaEditar(TipoConta tipoConta, String operacao) {
+	    	try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ifsc/tds/view/TipoContaEdit.fxml"));
+				Parent TipoContaEditXML = loader.load();
 
-	    }
+				// Criando uma janela e colocando o layout do xml nessa janela
+				Stage janelaTipoContaEditar = new Stage();
+				janelaTipoContaEditar.setTitle("Cadastro do favorecido" + operacao);
+				janelaTipoContaEditar.initModality(Modality.APPLICATION_MODAL);
+				janelaTipoContaEditar.resizableProperty().setValue(Boolean.FALSE);
 
-	    @FXML
+				Scene tipoContaEditLayout = new Scene(TipoContaEditXML);
+				janelaTipoContaEditar.setScene(tipoContaEditLayout);
+
+				// Setando o cliente no Controller.
+				FavorecidoEditController tipoContaEditController = loader.getController();
+				tipoContaEditController.setJanelaTipoContaEdit(janelaTipoContaEditar);
+				tipoContaEditController.setTipoConta(tipoConta);
+
+				// Mostra o Dialog e espera até que o usuário feche
+				janelaTipoContaEditar.showAndWait();
+
+				return TipoContaEditController.isOkClick();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+	
+
+		@FXML
 	    void onClickBtnExcluir(ActionEvent event) {
 	    	TipoConta tipoConta = this.tbvUsuarios.getSelectionModel().getSelectedItem();
 			if (tipoConta != null) {
