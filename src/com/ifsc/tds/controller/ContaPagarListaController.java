@@ -2,7 +2,6 @@ package com.ifsc.tds.controller;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -11,8 +10,6 @@ import com.ifsc.tds.dao.FavorecidoDAO;
 import com.ifsc.tds.dao.TipoContaDAO;
 import com.ifsc.tds.dao.UsuarioDAO;
 import com.ifsc.tds.entity.ContaPagar;
-import com.ifsc.tds.entity.TipoConta;
-import com.ifsc.tds.entity.Usuario;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -163,14 +161,49 @@ public class ContaPagarListaController implements Initializable {
 
     @FXML
     void onClickBtnEditar(ActionEvent event) {
-
+    	ContaPagar contasPagar = this.tbvContasPagar.getSelectionModel().getSelectedItem();
+		if (contasPagar != null) {
+			boolean btnConfirmarClic = this.showTelaTipoContaEditar(contasPagar,UsuarioListaController.USUARIO_INCLUIR);
+			if (btnConfirmarClic) {
+				this.getContasPagarDao().update(contasPagar, null);
+				this.carregarTableViewContasPagar();
+			}
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Por favor, escolha um usuário na Tabela!");
+			alert.show();
+		}
+    	
     }
 
     @FXML
     void onClickBtnExcluir(ActionEvent event) {
+    	ContaPagar contasPagar = this.tbvContasPagar.getSelectionModel().getSelectedItem();    
+    	if (contasPagar != null) {
+    		Alert alert = new Alert(AlertType.CONFIRMATION);
+    		alert.setTitle("Pergunta");
+    		alert.setHeaderText("Confirma a exclusão do usuario?\n" + contasPagar.getNome());
+    	
 
-    }
+			ButtonType buttonTypeNO = ButtonType.NO;
+			ButtonType buttonTypeYES = ButtonType.YES;
+			alert.getButtonTypes().setAll(buttonTypeYES, buttonTypeNO);
 
+			Optional<ButtonType> resultado = alert.showAndWait();
+			if (resultado.get() == ButtonType.YES) {
+				this.getContasPagarDao().delete(contasPagar);
+				this.carregarTableViewContasPagar();
+			}
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Por favor, escolha um filme ou livro!");
+			alert.show();
+		}
+	}
+    
+    	
+
+    
     @FXML
     void onClickBtnIncluir(ActionEvent event) {
     	ContaPagar contasPagar = new ContaPagar();

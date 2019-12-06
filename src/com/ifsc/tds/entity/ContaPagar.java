@@ -87,4 +87,9 @@ public class ContaPagar {
 		this.tipoConta = tipoConta;
 	}
 
+	public String getNome() {
+	
+		return null;
+	}
+
 }
