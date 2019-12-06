@@ -9,7 +9,7 @@ public class ContaPagar {
 	private Date dataPagamento;
 	private Date dataCadastro;
 	private Date dataVencimento;
-	private Double valorTotal;
+	private Double valorTotal = 0.00;
 
 	private Usuario usuario;
 	private Favorecido favorecido;

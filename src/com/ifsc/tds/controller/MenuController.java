@@ -313,4 +313,34 @@ public class MenuController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	@FXML
+    void mnoContasReceber(ActionEvent event) {
+		System.out.println("Teste");
+		try {
+			// Carregando o arquivo da tela de usuario
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ifsc/tds/view/ContaReceberLista.fxml"));
+			Parent contaReceberListaXML = loader.load();
+
+			// Carregando a classe de controle do arquivo da tela
+			ContaReceberListaController contaReceberListaController = loader.getController();
+			Scene contaReceberListaLayout = new Scene(contaReceberListaXML);
+
+			this.getStage().setScene(contaReceberListaLayout);
+			this.getStage().setTitle("Cadastro de conta a pagar");
+
+			// Atribuindo evento para fechar a tela
+			this.getStage().setOnCloseRequest(e -> {
+				if (contaReceberListaController.onCloseQuery()) {
+					this.getStage().close();
+				} else {
+					e.consume();
+				}
+			});
+			this.getStage().show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+	
 }

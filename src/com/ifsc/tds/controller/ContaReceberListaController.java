@@ -6,10 +6,12 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.ifsc.tds.dao.ContaPagarDAO;
+import com.ifsc.tds.dao.ContaReceberDAO;
 import com.ifsc.tds.dao.FavorecidoDAO;
 import com.ifsc.tds.dao.TipoContaDAO;
 import com.ifsc.tds.dao.UsuarioDAO;
 import com.ifsc.tds.entity.ContaPagar;
+import com.ifsc.tds.entity.ContaReceber;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,19 +33,19 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class ContaPagarListaController implements Initializable {
+public class ContaReceberListaController implements  Initializable{
 
     @FXML
-    private TableView<ContaPagar> tbvContasPagar;
+    private TableView<ContaReceber> tbvContasReceber;
 
     @FXML
-    private TableColumn<ContaPagar, Integer> tbcCodigo;
+    private TableColumn<ContaReceber, Integer> tbcCodigo;
 
     @FXML
-    private TableColumn<ContaPagar, String> tbcDescricao;
+    private TableColumn<ContaReceber, String> tbcDescricao;
 
     @FXML
-    private Label txtDetalhesPagar;
+    private Label txtDetalhesReceber;
 
     @FXML
     private GridPane txtDataPagto;
@@ -104,46 +106,47 @@ public class ContaPagarListaController implements Initializable {
 
     @FXML
     private Button btnExcluir;
+
     
-    private ContaPagarDAO contasPagarDao;
-    private List<ContaPagar> listaContasPagar;
-    private ObservableList<ContaPagar> observableListContasPagar = FXCollections.observableArrayList();
+    private ContaReceberDAO contasReceberDao;
+    private List<ContaReceber> listaContasReceber;
+    private ObservableList<ContaReceber> observableListContasReceber = FXCollections.observableArrayList();
     
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
-    	this.setContasPagarDao(new ContaPagarDAO());
-		this.carregarTableViewContasPagar();
-		this.selecionarItemTableViewContasPagar(null);
+    	this.setContasReceberDao(new ContaReceberDAO());
+		this.carregarTableViewContasReceber();
+		this.selecionarItemTableViewContasReceber(null);
 
 		// Adicionado evento diante de quaisquer alteração na seleção de itens do
 		// TableView
-		this.tbvContasPagar.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> selecionarItemTableViewContasPagar(newValue));
+		this.tbvContasReceber.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> selecionarItemTableViewContasReceber(newValue));
 	}
     
-    public void carregarTableViewContasPagar() {
+    public void carregarTableViewContasReceber() {
 
 		// preparando as colunas que irão aparecer na tabela
 		this.tbcCodigo.setCellValueFactory(new PropertyValueFactory<>("id"));
 		this.tbcDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
 
 		// Consulta os usuários da base e depois joga para tela
-		this.setListaContasPagar(this.getContasPagarDao().getAll());
-		this.setObservableListContasPagar(FXCollections.observableArrayList(this.getListaContasPagar()));
+		this.setListaContasReceber(this.getContasReceberDao().getAll());
+		this.setObservableListContasReceber(FXCollections.observableArrayList(this.getListaContasReceber()));
 
-		this.tbvContasPagar.setItems(this.getObservableListContasPagar());
+		this.tbvContasReceber.setItems(this.getObservableListContasReceber());
 	}
 
-	public void selecionarItemTableViewContasPagar(ContaPagar contaPagar) {
-		if (contaPagar != null) {
-			this.txtDescricao.setText(contaPagar.getDescricao());
-			this.txtDatapgto.setText(contaPagar.getDataPagamento().toString());
-			this.txtDataVenc.setText(contaPagar.getDataVencimento().toString());
-			this.txtDataCad.setText(contaPagar.getDataCadastro().toString());
-			this.txtValorTotal.setText(contaPagar.getValorTotal().toString());
-			this.txtUsuario.setText(contaPagar.getUsuario().getNome());
-			this.txtTipoConta.setText(contaPagar.getTipoConta().getNome());
-			this.txtFavorecido.setText(contaPagar.getFavorecido().getNome());
+	public void selecionarItemTableViewContasReceber(ContaReceber contaReceber) {
+		if (contaReceber != null) {
+			this.txtDescricao.setText(contaReceber.getDescricao());
+			this.txtDatapgto.setText(contaReceber.getDataPagamento().toString());
+			this.txtDataVenc.setText(contaReceber.getDataVencimento().toString());
+			this.txtDataCad.setText(contaReceber.getDataCadastro().toString());
+			this.txtValorTotal.setText(contaReceber.getValorTotal().toString());
+			this.txtUsuario.setText(contaReceber.getUsuario().getNome());
+			this.txtTipoConta.setText(contaReceber.getTipoConta().getNome());
+			this.txtFavorecido.setText(contaReceber.getFavorecido().getNome());
 		} else {
 			this.txtDescricao.setText("");
 			this.txtDatapgto.setText("");
@@ -158,12 +161,12 @@ public class ContaPagarListaController implements Initializable {
 
     @FXML
     void onClickBtnEditar(ActionEvent event) {
-    	ContaPagar contasPagar = this.tbvContasPagar.getSelectionModel().getSelectedItem();
-		if (contasPagar != null) {
-			boolean btnConfirmarClic = this.showTelaTipoContaEditar(contasPagar,UsuarioListaController.USUARIO_INCLUIR);
+    	ContaReceber contasReceber = this.tbvContasReceber.getSelectionModel().getSelectedItem();
+		if (contasReceber != null) {
+			boolean btnConfirmarClic = this.showTelaTipoContaEditar(contasReceber,UsuarioListaController.USUARIO_INCLUIR);
 			if (btnConfirmarClic) {
-				this.getContasPagarDao().update(contasPagar, null);
-				this.carregarTableViewContasPagar();
+				this.getContasReceberDao().update(contasReceber, null);
+				this.carregarTableViewContasReceber();
 			}
 		} else {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -175,11 +178,11 @@ public class ContaPagarListaController implements Initializable {
 
     @FXML
     void onClickBtnExcluir(ActionEvent event) {
-    	ContaPagar contasPagar = this.tbvContasPagar.getSelectionModel().getSelectedItem();    
-    	if (contasPagar != null) {
+    	ContaReceber contasReceber = this.tbvContasReceber.getSelectionModel().getSelectedItem();    
+    	if (contasReceber != null) {
     		Alert alert = new Alert(AlertType.CONFIRMATION);
     		alert.setTitle("Pergunta");
-    		alert.setHeaderText("Confirma a exclusão do usuario?\n" + contasPagar.getNome());
+    		alert.setHeaderText("Confirma a exclusão do usuario?\n" + contasReceber.getDescricao());
     	
 
 			ButtonType buttonTypeNO = ButtonType.NO;
@@ -188,8 +191,8 @@ public class ContaPagarListaController implements Initializable {
 
 			Optional<ButtonType> resultado = alert.showAndWait();
 			if (resultado.get() == ButtonType.YES) {
-				this.getContasPagarDao().delete(contasPagar);
-				this.carregarTableViewContasPagar();
+				this.getContasReceberDao().delete(contasReceber);
+				this.carregarTableViewContasReceber();
 			}
 		} else {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -203,37 +206,37 @@ public class ContaPagarListaController implements Initializable {
     
     @FXML
     void onClickBtnIncluir(ActionEvent event) {
-    	ContaPagar contasPagar = new ContaPagar();
-		boolean btnConfirmarClic = this.showTelaTipoContaEditar(contasPagar, UsuarioListaController.USUARIO_INCLUIR);
+    	ContaReceber contaReceber = new ContaReceber();
+		boolean btnConfirmarClic = this.showTelaTipoContaEditar(contaReceber, UsuarioListaController.USUARIO_INCLUIR);
 		if (btnConfirmarClic) {
-			this.getContasPagarDao().save(contasPagar);
-			this.carregarTableViewContasPagar();
+			this.getContasReceberDao().save(contaReceber);
+			this.carregarTableViewContasReceber();
 		}
     }
     
-    public boolean showTelaTipoContaEditar(ContaPagar contaPagar, String operacao) {
+    public boolean showTelaTipoContaEditar(ContaReceber contasReceber, String operacao) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ifsc/tds/view/ContaPagarEdit.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ifsc/tds/view/ContaReceberEdit.fxml"));
 			Parent usuarioEditXML = loader.load();
 
 			// Criando uma janela e colocando o layout do xml nessa janela
-			Stage janelaContaPagar = new Stage();
-			janelaContaPagar.setTitle("Cadastro de usuário" + operacao);
-			janelaContaPagar.initModality(Modality.APPLICATION_MODAL);
-			janelaContaPagar.resizableProperty().setValue(Boolean.FALSE);
+			Stage janelaContaReceber = new Stage();
+			janelaContaReceber.setTitle("Cadastro de usuário" + operacao);
+			janelaContaReceber.initModality(Modality.APPLICATION_MODAL);
+			janelaContaReceber.resizableProperty().setValue(Boolean.FALSE);
 
-			Scene tipoContaEditLayout = new Scene(usuarioEditXML);
-			janelaContaPagar.setScene(tipoContaEditLayout);
+			Scene contasPagarEditLayout = new Scene(usuarioEditXML);
+			janelaContaReceber.setScene(contasPagarEditLayout);
 
 			// Setando o cliente no Controller.
-			ContaPagarEditController contaPagarEditController = loader.getController();
-			contaPagarEditController.setJanelaContaPagarEdit(janelaContaPagar);
-			contaPagarEditController.setContaPagar(contaPagar);
+			ContaReceberEditController contaReceberEditController = loader.getController();
+			contaReceberEditController.setJanelaContaPagarEdit(janelaContaReceber);
+			contaReceberEditController.setContaReceber(contasReceber);
 
 			// Mostra o Dialog e espera até que o usuário feche
-			janelaContaPagar.showAndWait();
+			janelaContaReceber.showAndWait();
 
-			return contaPagarEditController.isOkClick();
+			return contaReceberEditController.isOkClick();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -241,30 +244,31 @@ public class ContaPagarListaController implements Initializable {
 		return false;
 	}
 
-	public ContaPagarDAO getContasPagarDao() {
-		return contasPagarDao;
+
+	public ContaReceberDAO getContasReceberDao() {
+		return contasReceberDao;
 	}
 
-	public void setContasPagarDao(ContaPagarDAO contasPagarDao) {
-		this.contasPagarDao = contasPagarDao;
+	public void setContasReceberDao(ContaReceberDAO contasReceberDao) {
+		this.contasReceberDao = contasReceberDao;
 	}
 
-	public List<ContaPagar> getListaContasPagar() {
-		return listaContasPagar;
+	public ObservableList<ContaReceber> getObservableListContasReceber() {
+		return observableListContasReceber;
 	}
 
-	public void setListaContasPagar(List<ContaPagar> listaContasPagar) {
-		this.listaContasPagar = listaContasPagar;
+	public void setObservableListContasReceber(ObservableList<ContaReceber> observableListContasReceber) {
+		this.observableListContasReceber = observableListContasReceber;
 	}
 
-	public ObservableList<ContaPagar> getObservableListContasPagar() {
-		return observableListContasPagar;
+	public List<ContaReceber> getListaContasReceber() {
+		return listaContasReceber;
 	}
 
-	public void setObservableListContasPagar(ObservableList<ContaPagar> observableListContasPagar) {
-		this.observableListContasPagar = observableListContasPagar;
+	public void setListaContasReceber(List<ContaReceber> listaContasReceber) {
+		this.listaContasReceber = listaContasReceber;
 	}
-	
+
 	public boolean onCloseQuery() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setTitle("Pergunta");

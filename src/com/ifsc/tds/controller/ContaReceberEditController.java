@@ -9,6 +9,7 @@ import com.ifsc.tds.dao.FavorecidoDAO;
 import com.ifsc.tds.dao.TipoContaDAO;
 import com.ifsc.tds.dao.UsuarioDAO;
 import com.ifsc.tds.entity.ContaPagar;
+import com.ifsc.tds.entity.ContaReceber;
 import com.ifsc.tds.entity.Favorecido;
 import com.ifsc.tds.entity.TipoConta;
 import com.ifsc.tds.entity.Usuario;
@@ -19,15 +20,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-public class ContaPagarEditController implements Initializable {
+public class ContaReceberEditController implements Initializable{
 
     @FXML
     private Label lblDescricao;
@@ -82,9 +83,9 @@ public class ContaPagarEditController implements Initializable {
 
     @FXML
     private Button btnCancela;
-
-	private Stage janelaContaPagarEdit;
-	private ContaPagar contaPagar;
+    
+    private Stage janelaContaReceberEdit;
+	private ContaReceber contaReceber;
 	private boolean okClick = false;
 
 	private List<Usuario> listaUsuarios;
@@ -101,23 +102,23 @@ public class ContaPagarEditController implements Initializable {
 
 	@FXML
 	void clickCancela(ActionEvent event) {
-		this.janelaContaPagarEdit.close();
+		this.janelaContaReceberEdit.close();
 	}
 
 	@FXML
 	void clickOK(ActionEvent event) {
 		if (validarCampos()) {
-			this.contaPagar.setDescricao(this.txtDescricao.getText());
-			this.contaPagar.setUsuario(this.cbxUsuario.getSelectionModel().getSelectedItem());
-			this.contaPagar.setTipoConta(this.cbxTipoConta.getSelectionModel().getSelectedItem());
-			this.contaPagar.setFavorecido(this.cbxFavorecido.getSelectionModel().getSelectedItem());
-			this.contaPagar.setDataVencimento(Date.valueOf(this.dtpDataVencimento.getValue()));
-			this.contaPagar.setDataCadastro(Date.valueOf(this.dtpDataCadastro.getValue()));
-			this.contaPagar.setDataPagamento(Date.valueOf(this.dtpDataPagamento.getValue()));
-			this.contaPagar.setValorTotal(Double.parseDouble(this.txtValorTotal.getText()));
+			this.contaReceber.setDescricao(this.txtDescricao.getText());
+			this.contaReceber.setUsuario(this.cbxUsuario.getSelectionModel().getSelectedItem());
+			this.contaReceber.setTipoConta(this.cbxTipoConta.getSelectionModel().getSelectedItem());
+			this.contaReceber.setFavorecido(this.cbxFavorecido.getSelectionModel().getSelectedItem());
+			this.contaReceber.setDataVencimento(Date.valueOf(this.dtpDataVencimento.getValue()));
+			this.contaReceber.setDataCadastro(Date.valueOf(this.dtpDataCadastro.getValue()));
+			this.contaReceber.setDataPagamento(Date.valueOf(this.dtpDataPagamento.getValue()));
+			this.contaReceber.setValorTotal(Double.parseDouble(this.txtValorTotal.getText()));
 
 			this.okClick = true;
-			this.janelaContaPagarEdit.close();
+			this.janelaContaReceberEdit.close();
 		}
 	}
 
@@ -138,7 +139,7 @@ public class ContaPagarEditController implements Initializable {
 	 * @param janelaContaPagarEdit
 	 */
 	public void setJanelaContaPagarEdit(Stage janelaContaPagarEdit) {
-		this.janelaContaPagarEdit = janelaContaPagarEdit;
+		this.janelaContaReceberEdit = janelaContaPagarEdit;
 	}
 
 	/**
@@ -146,22 +147,6 @@ public class ContaPagarEditController implements Initializable {
 	 * 
 	 * @param contaPagar
 	 */
-	public void setContaPagar(ContaPagar contaPagar) {
-		this.contaPagar = contaPagar;
-		if(contaPagar.getId() != null) {
-			this.txtDescricao.setText(contaPagar.getDescricao());
-			this.txtValorTotal.setText(contaPagar.getValorTotal().toString());
-			this.cbxUsuario.setValue(contaPagar.getUsuario());
-			this.cbxFavorecido.setValue(contaPagar.getFavorecido());
-			this.cbxTipoConta.setValue(contaPagar.getTipoConta());
-			this.dtpDataCadastro.setValue(contaPagar.getDataCadastro().toLocalDate());
-			this.dtpDataPagamento.setValue(contaPagar.getDataPagamento().toLocalDate());
-			this.dtpDataVencimento.setValue(contaPagar.getDataVencimento().toLocalDate());
-
-		}
-		
-	}
-
 	/**
 	 * Retorna verdadeiro se o usuário clicou o botão OK, senão retorna false.
 	 * 
@@ -188,7 +173,7 @@ public class ContaPagarEditController implements Initializable {
 		} else {
 			// Mostrando os erros.
 			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.initOwner(this.janelaContaPagarEdit);
+			alerta.initOwner(this.janelaContaReceberEdit);
 			alerta.setTitle("Dados inválidos!");
 			alerta.setHeaderText("Favor corrigir as seguintes informações:");
 			alerta.setContentText(mensagemErros);
@@ -225,4 +210,29 @@ public class ContaPagarEditController implements Initializable {
 		this.observableListaFavorecidos = FXCollections.observableArrayList(listaFavorecidos);
 		this.cbxFavorecido.setItems(this.observableListaFavorecidos);
 	}
+
+	public ContaReceber getContaReceber() {
+		return contaReceber;
+	}
+
+	public void setContaReceber(ContaReceber contaReceber) {
+		this.contaReceber = contaReceber;
+		
+		if(contaReceber.getId() != null) {
+			this.txtDescricao.setText(contaReceber.getDescricao());
+			this.txtValorTotal.setText(contaReceber.getValorTotal().toString());
+			this.cbxUsuario.setValue(contaReceber.getUsuario());
+			this.cbxFavorecido.setValue(contaReceber.getFavorecido());
+			this.cbxTipoConta.setValue(contaReceber.getTipoConta());
+			this.dtpDataCadastro.setValue(contaReceber.getDataCadastro().toLocalDate());
+			this.dtpDataPagamento.setValue(contaReceber.getDataPagamento().toLocalDate());
+			this.dtpDataVencimento.setValue(contaReceber.getDataVencimento().toLocalDate());
+
+		}
+		
+	}
+
+	
+	
+	
 }

@@ -118,12 +118,12 @@ public class TipoContaListaController implements Initializable {
 	    void onClickBtnEditar(ActionEvent event) {
 	    	TipoConta tipoConta = this.tbvUsuarios.getSelectionModel().getSelectedItem();
 			if (tipoConta != null) {
-				boolean btnConfirmarClic = this.showTelaTipoContaEditar(tipoConta,
-						TipoContaListaController.CONTA_EDITAR);
-				if (btnConfirmarClic) {
-					this.getTipoContaDao().update(tipoConta, null);
-					this.carregarTableViewTipoConta();
-				}
+				tipoConta.setNome(txtTipoConta.getText());
+				tipoConta.setStatus(Integer.parseInt(txtStatus.getText()));
+				
+				getTipoContaDao().update(tipoConta, null);
+				
+				carregarTableViewTipoConta();
 			} else {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setContentText("Por favor, escolha um usuário na Tabela!");
